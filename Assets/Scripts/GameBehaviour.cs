@@ -1,0 +1,59 @@
+using UnityEngine;
+
+public class GameBehaviour : MonoBehaviour
+{
+    public static GameBehaviour Instance;
+
+    public Difficulties currentDifficulties = Difficulties.easy;
+
+    private string difficultiesKey = "difficulty";
+    private string unlockLevelKey = "unlockLevel";
+
+    private void Awake()
+    {
+        if (Instance == null) 
+        {
+            Instance = this;
+        }
+
+        DontDestroyOnLoad(gameObject);
+    }
+
+    public void SetDifficulties(Difficulties newDifficulties)
+    {
+        switch (newDifficulties)
+        {
+            case Difficulties.easy:
+                PlayerPrefs.SetInt(difficultiesKey, 0);
+                break;
+            case Difficulties.medium:
+                PlayerPrefs.SetInt(difficultiesKey, 1);
+                break;
+            case Difficulties.hard:
+                PlayerPrefs.SetInt(difficultiesKey, 2);
+                break;
+        }
+    }
+
+    public void UnlockLevel(int level)
+    {
+        int currentLevel = GetCurrentLevel();
+        if(level < currentLevel)
+        {
+            PlayerPrefs.SetInt(unlockLevelKey, level);
+            currentLevel = level;
+        }
+    }
+
+    public int GetCurrentLevel()
+    {
+        return PlayerPrefs.GetInt(unlockLevelKey, 0);
+    }
+}
+
+public enum Difficulties
+{
+    easy,
+    medium,
+    hard
+}
