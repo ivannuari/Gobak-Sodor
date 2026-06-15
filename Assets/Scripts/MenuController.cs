@@ -29,6 +29,7 @@ public class MenuController : MonoBehaviour
         {
             if (levelPanel != null)
             {
+                CheckLevelUnlocked();
                 levelPanel.SetActive(true);
             }
         });
@@ -70,6 +71,7 @@ public class MenuController : MonoBehaviour
     private void CheckLevelUnlocked()
     {
         int currentLevel = GameBehaviour.Instance.GetCurrentLevel();
+        Debug.Log(currentLevel);
 
         if(currentLevel == 0)
         {

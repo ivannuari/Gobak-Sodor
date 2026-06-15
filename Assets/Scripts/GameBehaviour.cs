@@ -38,10 +38,11 @@ public class GameBehaviour : MonoBehaviour
     public void UnlockLevel(int level)
     {
         int currentLevel = GetCurrentLevel();
-        if(level < currentLevel)
+        Debug.LogWarning($"CHECK Level: {level}");
+        if(level > currentLevel)
         {
-            PlayerPrefs.SetInt(unlockLevelKey, level);
             currentLevel = level;
+            PlayerPrefs.SetInt(unlockLevelKey, currentLevel);
         }
     }
 

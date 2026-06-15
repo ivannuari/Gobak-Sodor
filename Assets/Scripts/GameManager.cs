@@ -19,6 +19,8 @@ public class GameManager : MonoBehaviour
     public AudioClip winSFX;
     public AudioClip loseSFX;
 
+    private bool isCalculated = false;
+
     public static GameManager instance;
 
     private void Awake()
@@ -73,11 +75,6 @@ public class GameManager : MonoBehaviour
     //Check if all player has been finished
     private void CheckWin()
     {
-        int currentLevel = GameBehaviour.Instance.GetCurrentLevel();
-        currentLevel++;
-
-        GameBehaviour.Instance.UnlockLevel(currentLevel);
-
         bool allDestroyed = true;
 
         foreach (GameObject target in targets)
@@ -97,17 +94,25 @@ public class GameManager : MonoBehaviour
             winPanel.SetActive(true);
             losePanel.SetActive(false);
 
-            if (score >= targets.Length * 10)
+            if (!isCalculated)
             {
-                winText.text = $"Kamu Berhasil!";
-            }
-            else if (score < targets.Length * 10 && score > 0)
-            {
-                winText.text = $"Coba Lagi Ya!";
-            }
-            else
-            {
-                winText.text = $"Kamu Kalah!";
+                isCalculated = true;
+                if (score >= targets.Length * 10)
+                {
+                    int currentLevel = GameBehaviour.Instance.GetCurrentLevel();
+                    currentLevel++;
+
+                    GameBehaviour.Instance.UnlockLevel(currentLevel);
+                    winText.text = $"Kamu Berhasil!";
+                }
+                else if (score < targets.Length * 10 && score > 0)
+                {
+                    winText.text = $"Coba Lagi Ya!";
+                }
+                else
+                {
+                    winText.text = $"Kamu Kalah!";
+                }
             }
         }
     }
