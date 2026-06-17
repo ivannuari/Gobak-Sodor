@@ -38,6 +38,7 @@ public class MenuController : MonoBehaviour
         exitButton.onClick.RemoveAllListeners();
         exitButton.onClick.AddListener(() =>
         {
+            PlayerPrefs.DeleteAll();
             Application.Quit();
         });
 

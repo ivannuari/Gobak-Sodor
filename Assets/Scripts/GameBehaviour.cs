@@ -50,6 +50,11 @@ public class GameBehaviour : MonoBehaviour
     {
         return PlayerPrefs.GetInt(unlockLevelKey, 0);
     }
+
+    private void OnApplicationQuit()
+    {
+        PlayerPrefs.DeleteAll();
+    }
 }
 
 public enum Difficulties
