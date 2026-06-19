@@ -8,6 +8,7 @@ public class CharacterHandler : MonoBehaviour
     public CharacterMode characterMode = CharacterMode.InMenu;
 
     public SkinnedMeshRenderer clothRenderer;
+    public SkinnedMeshRenderer hairRenderer;
 
     public int characterIndex;
 
@@ -20,7 +21,14 @@ public class CharacterHandler : MonoBehaviour
         SetCharacter();
         GameBehaviour.Instance.OnJerseyColorChanged += ChangeSuitColor;
 
+        ChangeHairColor();
         ChangeSuitColor(GameBehaviour.Instance.characterJerseyColor);
+    }
+
+    private void ChangeHairColor()
+    {
+        Color randColor = UnityEngine.Random.ColorHSV();
+        hairRenderer.material.SetColor("_HAIRCOLOR", randColor);
     }
 
     private void OnDestroy()

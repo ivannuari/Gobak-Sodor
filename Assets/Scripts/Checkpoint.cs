@@ -1,35 +1,45 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Checkpoint : MonoBehaviour
 {
-    public Type type;
+    public CheckpointType type;
 
     private void OnTriggerEnter(Collider other)
     {
-        /*//Check if player is on checkpoint
-        if (other.CompareTag("Player") && type == Type.Checkpoint)
-        {
-            other.GetComponent<PelariController>().isCheckpoint = true;
-        }
+        var _controller = GameController.Instance;
+        bool isCollide = other.CompareTag("Penyerang");
 
-        //Check if player is on finish
-        if (other.CompareTag("Player") && type == Type.Finish)
+        if (isCollide)
         {
-            if (other.GetComponent<PelariController>().isCheckpoint)
+            bool isPenyerang = GameBehaviour.Instance.characterType == CharacterType.Penyerang;
+            if (isPenyerang)
             {
-                GameManager.instance.PlaySFX(GameManager.instance.winSFX);
-                other.GetComponent<PelariController>().isFinish = true;
-                other.gameObject.SetActive(false);
-                GameManager.instance.AddScore(10);
+                Penyerang _penyerang = other.GetComponent<Penyerang>();
+                if (_penyerang == null) return;
+                
+                switch (type)
+                {
+                    case CheckpointType.Checkpoint:
+                        _penyerang.checkpoint = true;
+                        _controller.ShowNotification("Saatnya kembali ke awal");
+                        break;
+                    case CheckpointType.Finish:
+                        if(_penyerang.checkpoint)
+                        {
+                            _controller.activePenyerang = null;
+                            _controller.ShowNotification("Berhasil!!");
+                            _controller.AddScore();
+                            Destroy(other.gameObject);
+                        }
+                        break;
+                }
             }
-        }*/
+        }
     }
 }
 
 [System.Serializable]
-public enum Type
+public enum CheckpointType
 {
     Checkpoint,
     Finish
