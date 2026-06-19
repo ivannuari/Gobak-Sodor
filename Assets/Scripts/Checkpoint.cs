@@ -8,7 +8,7 @@ public class Checkpoint : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        //Check if player is on checkpoint
+        /*//Check if player is on checkpoint
         if (other.CompareTag("Player") && type == Type.Checkpoint)
         {
             other.GetComponent<PelariController>().isCheckpoint = true;
@@ -24,7 +24,7 @@ public class Checkpoint : MonoBehaviour
                 other.gameObject.SetActive(false);
                 GameManager.instance.AddScore(10);
             }
-        }
+        }*/
     }
 }
 

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class GameBehaviour : MonoBehaviour
@@ -5,9 +6,13 @@ public class GameBehaviour : MonoBehaviour
     public static GameBehaviour Instance;
 
     public Difficulties currentDifficulties = Difficulties.easy;
+    public CharacterType characterType = CharacterType.Penyerang;
+    public Color characterJerseyColor = Color.white;
 
     private string difficultiesKey = "difficulty";
     private string unlockLevelKey = "unlockLevel";
+
+    public event Action<Color> OnJerseyColorChanged;
 
     private void Awake()
     {
@@ -54,6 +59,12 @@ public class GameBehaviour : MonoBehaviour
     private void OnApplicationQuit()
     {
         PlayerPrefs.DeleteAll();
+    }
+
+    public void ChangeJerseyColor(Color randColor)
+    {
+        characterJerseyColor = randColor;
+        OnJerseyColorChanged?.Invoke(randColor);
     }
 }
 
