@@ -9,6 +9,7 @@ public class GameController : MonoBehaviour
     public Penjaga activePenjaga;
 
     [SerializeField] private int poin = 0;
+    [SerializeField] private int totalPenyerang = 5;
 
     public LayerMask penyerangLayer;
     public LayerMask penjagaLayer;
@@ -16,6 +17,7 @@ public class GameController : MonoBehaviour
 
     public event Action<string> OnNotifierShowed;
     public event Action<int> OnScoreUpdated;
+    public event Action OnGameOver;
 
     private void Awake()
     {
@@ -33,7 +35,15 @@ public class GameController : MonoBehaviour
     public void AddScore()
     {
         poin += 10;
+        totalPenyerang--;
         OnScoreUpdated?.Invoke(poin);
+
+        CheckGameOver();
+    }
+
+    public int GetPoin()
+    {
+        return poin;
     }
 
     private void Update()
@@ -71,6 +81,26 @@ public class GameController : MonoBehaviour
                     }
                 }
             }
+        }
+    }
+
+    public void CatchPenyerang()
+    {
+        Destroy(activePenyerang.gameObject);
+        activePenyerang = null;
+        totalPenyerang--;
+        poin -= 10;
+        OnScoreUpdated?.Invoke(poin);
+        ShowNotification("Tertangkap!");
+
+        CheckGameOver();
+    }
+
+    private void CheckGameOver()
+    {
+        if (totalPenyerang < 1)
+        {
+            OnGameOver?.Invoke();
         }
     }
 }

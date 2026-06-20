@@ -10,7 +10,7 @@ public class GamePanel : MonoBehaviour
 
     public TMP_Text poinText;
 
-    public GameObject winPanel;
+    public ResultPanel resultPanel;
     public GameObject losePanel;
 
     public GameObject notifierPanel;
@@ -20,6 +20,7 @@ public class GamePanel : MonoBehaviour
     {
         GameController.Instance.OnNotifierShowed += Instance_OnNotifierShowed;
         GameController.Instance.OnScoreUpdated += Instance_OnScoreUpdated;
+        GameController.Instance.OnGameOver += Instance_OnGameOver;
 
         menuButton.onClick.AddListener(() =>
         {
@@ -31,6 +32,12 @@ public class GamePanel : MonoBehaviour
     {
         GameController.Instance.OnNotifierShowed -= Instance_OnNotifierShowed;
         GameController.Instance.OnScoreUpdated -= Instance_OnScoreUpdated;
+        GameController.Instance.OnGameOver -= Instance_OnGameOver;
+    }
+
+    private void Instance_OnGameOver()
+    {
+        resultPanel.gameObject.SetActive(true);
     }
 
     private async void Instance_OnNotifierShowed(string message)
