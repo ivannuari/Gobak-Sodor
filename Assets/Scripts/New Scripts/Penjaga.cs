@@ -6,20 +6,33 @@ public class Penjaga : MonoBehaviour
     public float speed;
     public float defendArea;
     public float catchArea;
-
     public float stopDistance = 0.1f;
     public bool isDefending = false;
-
     public LayerMask penyerangLayer;
 
     private Outline _outline;
     private Animator _anim;
+    private Vector3 _centerPosition; // posisi awal/tengah
+    private CharacterHandler _charaHandler;
 
     private void Start()
     {
-        _outline = GetComponent<Outline>();
         _anim = GetComponentInChildren<Animator>();
+        _charaHandler = GetComponentInChildren<CharacterHandler>();
+
         _anim.SetBool("Penjaga", true);
+
+        bool isPlayer = GameBehaviour.Instance.characterType == CharacterType.Penjaga;
+        _charaHandler.isPlayer = isPlayer;
+
+        // Simpan posisi awal sebagai titik tengah
+        _centerPosition = transform.position;
+    }
+
+    public void Activate()
+    {
+        _outline = GetComponent<Outline>();
+        _outline.enabled = true;
     }
 
     private void Update()
@@ -27,12 +40,8 @@ public class Penjaga : MonoBehaviour
         bool _isPlayer = GameBehaviour.Instance.characterType == CharacterType.Penjaga;
         bool _isAi = GameBehaviour.Instance.characterType == CharacterType.Penyerang;
 
-        if (_isPlayer) { }
-
-        if (_isAi)
-        {
-            AiMovement();
-        }
+        if (_isPlayer) { HandlePlayerMovement(); }
+        if (_isAi) { AiMovement(); }
     }
 
     private void AiMovement()
@@ -49,14 +58,18 @@ public class Penjaga : MonoBehaviour
             switch (GameBehaviour.Instance.currentDifficulties)
             {
                 case Difficulties.easy:
-                    //diam
+                    // Diam di tempat
                     _anim.SetFloat("Geser", 0f);
                     break;
+
                 case Difficulties.medium:
-                    //bergerak ke arah tengah sedikit
+                    // Bergerak sedikit ke arah tengah (setengah speed)
+                    MoveToCenter(speed * 0.5f, fullReturn: false);
                     break;
+
                 case Difficulties.hard:
-                    //bergerak kembali ke tengah
+                    // Kembali sepenuhnya ke tengah (full speed)
+                    MoveToCenter(speed, fullReturn: true);
                     break;
             }
             return;
@@ -72,20 +85,13 @@ public class Penjaga : MonoBehaviour
         Transform target = GetClosestTarget(hits);
         if (target == null) return;
 
-        // Rotasi berpatokan sumbu X (kanan/kiri)
         float diffX = target.position.x - transform.position.x;
         if (diffX > 0)
-        {
-            transform.rotation = Quaternion.Euler(0f, 90f, 0f);   // hadap kanan
-        }
+            transform.rotation = Quaternion.Euler(0f, 90f, 0f);
         else if (diffX < 0)
-        {
-            transform.rotation = Quaternion.Euler(0f, -90f, 0f); // hadap kiri
-        }
+            transform.rotation = Quaternion.Euler(0f, -90f, 0f);
 
-        // Pergerakan berpatokan sumbu Z
         float diffZ = target.position.z - transform.position.z;
-
         if (Mathf.Abs(diffZ) <= stopDistance)
         {
             _anim.SetFloat("Geser", 0f);
@@ -93,7 +99,6 @@ public class Penjaga : MonoBehaviour
         }
 
         float dirZ = Mathf.Sign(diffZ);
-
         transform.position = new Vector3(
             transform.position.x,
             transform.position.y,
@@ -103,6 +108,43 @@ public class Penjaga : MonoBehaviour
         _anim.SetFloat("Geser", dirZ);
     }
 
+    private void MoveToCenter(float moveSpeed, bool fullReturn)
+    {
+        float diffZ = _centerPosition.z - transform.position.z;
+
+        // Jika sudah di tengah atau sangat dekat, diam
+        if (Mathf.Abs(diffZ) <= stopDistance)
+        {
+            _anim.SetFloat("Geser", 0f);
+
+            // Snap ke tengah hanya jika hard (full return)
+            if (fullReturn)
+            {
+                transform.position = new Vector3(
+                    transform.position.x,
+                    transform.position.y,
+                    _centerPosition.z
+                );
+            }
+            return;
+        }
+
+        // Medium: hanya bergerak jika masih jauh dari tengah (> 1 unit)
+        if (!fullReturn && Mathf.Abs(diffZ) < 1f)
+        {
+            _anim.SetFloat("Geser", 0f);
+            return;
+        }
+
+        float dirZ = Mathf.Sign(diffZ);
+        transform.position = new Vector3(
+            transform.position.x,
+            transform.position.y,
+            transform.position.z + dirZ * moveSpeed * Time.deltaTime
+        );
+
+        _anim.SetFloat("Geser", dirZ);
+    }
 
     private Transform GetClosestTarget(Collider[] colliders)
     {
@@ -111,7 +153,6 @@ public class Penjaga : MonoBehaviour
 
         foreach (var col in colliders)
         {
-            // Jarak dihitung hanya dari selisih Z
             float dist = Mathf.Abs(col.transform.position.z - transform.position.z);
             if (dist < minDist)
             {
@@ -132,8 +173,56 @@ public class Penjaga : MonoBehaviour
     {
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, defendArea);
-
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, catchArea);
     }
+
+    private Vector3? _moveTarget; // null jika tidak ada tujuan
+
+    public void MoveTo(Vector3 point)
+    {
+        // Simpan hanya nilai Z tujuan, X dan Y tidak berubah
+        _moveTarget = new Vector3(transform.position.x, transform.position.y, point.z);
+    }
+
+    private void HandlePlayerMovement()
+    {
+        if (_moveTarget == null) return;
+
+        float diffZ = _moveTarget.Value.z - transform.position.z;
+
+        Collider[] _catch = Physics.OverlapSphere(transform.position, catchArea, penyerangLayer);
+        if (_catch.Length > 0)
+        {
+            GameController.Instance.CatchOpponentPenyerang();
+            return;
+        }
+
+        // Sudah sampai, berhenti
+        if (Mathf.Abs(diffZ) <= stopDistance)
+        {
+            _moveTarget = null;
+            _anim.SetFloat("Geser", 0f);
+            return;
+        }
+
+        float dirZ = Mathf.Sign(diffZ);
+
+        transform.position = new Vector3(
+            transform.position.x,
+            transform.position.y,
+            transform.position.z + dirZ * speed * Time.deltaTime
+        );
+
+        // Rotasi berpatokan X target vs posisi sekarang
+        float diffX = _moveTarget.Value.x - transform.position.x;
+        if (diffX > 0)
+            transform.rotation = Quaternion.Euler(0f, 90f, 0f);
+        else if (diffX < 0)
+            transform.rotation = Quaternion.Euler(0f, -90f, 0f);
+
+        _anim.SetFloat("Geser", dirZ);
+    }
+
+   
 }

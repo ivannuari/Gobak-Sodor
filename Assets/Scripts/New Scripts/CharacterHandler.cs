@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using System.Threading;
 
 public class CharacterHandler : MonoBehaviour
 {
@@ -14,12 +15,14 @@ public class CharacterHandler : MonoBehaviour
 
     private Animator anim;
 
-    private void Start()
+    private async void Start()
     {
         anim = GetComponentInChildren<Animator>();
 
         SetCharacter();
         GameBehaviour.Instance.OnJerseyColorChanged += ChangeSuitColor;
+
+        await Awaitable.WaitForSecondsAsync(1, CancellationToken.None);
 
         ChangeHairColor();
         ChangeSuitColor(GameBehaviour.Instance.characterJerseyColor);
