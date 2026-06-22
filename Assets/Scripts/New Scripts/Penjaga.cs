@@ -49,11 +49,14 @@ public class Penjaga : MonoBehaviour
             switch (GameBehaviour.Instance.currentDifficulties)
             {
                 case Difficulties.easy:
+                    //diam
                     _anim.SetFloat("Geser", 0f);
                     break;
                 case Difficulties.medium:
+                    //bergerak ke arah tengah sedikit
                     break;
                 case Difficulties.hard:
+                    //bergerak kembali ke tengah
                     break;
             }
             return;
