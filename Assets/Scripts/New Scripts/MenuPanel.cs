@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,6 +12,7 @@ public class MenuPanel : MonoBehaviour
 
     private void Start()
     {
+        SetupButton();
         canvasManager = GetComponentInParent<CanvasManager>();
 
         playButton.onClick.AddListener(() => canvasManager.SetSetupPanel());
@@ -21,5 +23,14 @@ public class MenuPanel : MonoBehaviour
             PlayerPrefs.DeleteAll();
             Application.Quit();
         });
+    }
+
+    private void SetupButton()
+    {
+        Button[] allButtons = GetComponentsInChildren<Button>();
+        foreach (var item in allButtons)
+        {
+            item.onClick.AddListener(() => GameBehaviour.Instance.PlaySound("Button"));
+        }
     }
 }

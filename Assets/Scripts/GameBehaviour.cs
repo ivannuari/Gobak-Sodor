@@ -9,8 +9,12 @@ public class GameBehaviour : MonoBehaviour
     public CharacterType characterType = CharacterType.Penyerang;
     public Color characterJerseyColor = Color.white;
 
+    [SerializeField] private int levelUnlocked;
+
     private string difficultiesKey = "difficulty";
     private string unlockLevelKey = "unlockLevel";
+
+    private AudioManager _audioManager;
 
     public event Action<Color> OnJerseyColorChanged;
 
@@ -22,6 +26,9 @@ public class GameBehaviour : MonoBehaviour
         }
 
         DontDestroyOnLoad(gameObject);
+        _audioManager = GetComponentInChildren<AudioManager>();
+
+        levelUnlocked = PlayerPrefs.GetInt(unlockLevelKey, 0);
     }
 
     public void SetDifficulties(Difficulties newDifficulties)
@@ -53,7 +60,7 @@ public class GameBehaviour : MonoBehaviour
 
     public int GetCurrentLevel()
     {
-        return PlayerPrefs.GetInt(unlockLevelKey, 0);
+        return levelUnlocked;
     }
 
     private void OnApplicationQuit()
@@ -65,6 +72,11 @@ public class GameBehaviour : MonoBehaviour
     {
         characterJerseyColor = randColor;
         OnJerseyColorChanged?.Invoke(randColor);
+    }
+
+    public void PlaySound(string soundName)
+    {
+        _audioManager.PlaySound(soundName);
     }
 }
 

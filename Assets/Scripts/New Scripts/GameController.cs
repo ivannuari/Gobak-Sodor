@@ -73,6 +73,7 @@ public class GameController : MonoBehaviour
         poin += 10;
         totalPenyerang--;
         OnScoreUpdated?.Invoke(poin);
+        GameBehaviour.Instance.PlaySound("Victory");
 
         CheckGameOver();
     }
@@ -102,10 +103,6 @@ public class GameController : MonoBehaviour
                             _ch.Activate();
                             activePenyerang = _ch;
                         }
-                        else
-                        {
-                            // logika lain jika sudah ada activePenyerang
-                        }
                     }
                 }
 
@@ -113,7 +110,6 @@ public class GameController : MonoBehaviour
                 {
                     if (activePenyerang != null)
                     {
-                        // Gunakan hit.point, bukan ScreenToWorldPoint
                         Vector3 pos = hit.point;
                         ActivateIndicator(hit.point);
                         activePenyerang.MoveTo(pos);
@@ -152,6 +148,7 @@ public class GameController : MonoBehaviour
         poin -= 10;
         OnScoreUpdated?.Invoke(poin);
         ShowNotification("Tertangkap!");
+        GameBehaviour.Instance.PlaySound("Lose");
 
         CheckGameOver();
     }

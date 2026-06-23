@@ -18,6 +18,17 @@ public class OptionPanel : MonoBehaviour
         backButton.onClick.AddListener(() => canvasManager.SetMenuPanel());
         bgmSlider.onValueChanged.AddListener(ChangeBgm);
         sfxSlider.onValueChanged.AddListener(ChangeSfx);
+
+        SetupButton();
+    }
+
+    private void SetupButton()
+    {
+        Button[] allButtons = GetComponentsInChildren<Button>();
+        foreach (var item in allButtons)
+        {
+            item.onClick.AddListener(() => GameBehaviour.Instance.PlaySound("Button"));
+        }
     }
 
     private void ChangeSfx(float val)

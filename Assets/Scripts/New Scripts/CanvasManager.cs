@@ -8,6 +8,7 @@ public class CanvasManager : MonoBehaviour
     private void Start()
     {
         SetMenuPanel();
+        GameBehaviour.Instance.PlaySound("BGM");
     }
 
     public void SetMenuPanel()

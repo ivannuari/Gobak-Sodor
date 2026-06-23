@@ -28,6 +28,15 @@ public class GamePanel : MonoBehaviour
         });
     }
 
+    private void SetupButton()
+    {
+        Button[] allButtons = GetComponentsInChildren<Button>();
+        foreach (var item in allButtons)
+        {
+            item.onClick.AddListener(() => GameBehaviour.Instance.PlaySound("Button"));
+        }
+    }
+
     private void OnDestroy()
     {
         GameController.Instance.OnNotifierShowed -= Instance_OnNotifierShowed;

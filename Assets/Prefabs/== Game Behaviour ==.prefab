@@ -1,5 +1,68 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3824174211172308185
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2879661910221271385}
+  - component: {fileID: 3376460437666981835}
+  m_Layer: 0
+  m_Name: Audio Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2879661910221271385
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3824174211172308185}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1184496486960217829}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3376460437666981835
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3824174211172308185}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1eb88dbb1b5d582439764e013cab2855, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AudioManager
+  allSounds:
+  - key: BGM
+    clip: {fileID: 8300000, guid: a4c098116ad50b74fa9824254dc684a9, type: 3}
+    isLoop: 1
+    source: {fileID: 0}
+  - key: Victory
+    clip: {fileID: 8300000, guid: f5585749c075684438301c139e8bed30, type: 3}
+    isLoop: 0
+    source: {fileID: 0}
+  - key: Lose
+    clip: {fileID: 8300000, guid: 0e50ad5e6560e064f94f7537c333d5f5, type: 3}
+    isLoop: 0
+    source: {fileID: 0}
+  - key: Button
+    clip: {fileID: 8300000, guid: 25b22ffac1f5abc48b0ec5d0f4778990, type: 3}
+    isLoop: 0
+    source: {fileID: 0}
+  bgmVolume: 1
+  sfxVolume: 1
 --- !u!1 &7575840063044381486
 GameObject:
   m_ObjectHideFlags: 0
@@ -29,7 +92,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 2879661910221271385}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &682501673349842493
@@ -45,3 +109,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameBehaviour
   currentDifficulties: 0
+  characterType: 0
+  characterJerseyColor: {r: 1, g: 1, b: 1, a: 1}

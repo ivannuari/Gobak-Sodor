@@ -26,9 +26,18 @@ public class SetupPanel : MonoBehaviour
 
         playButton.onClick.AddListener(()=> canvasManager.SetDifficultiesPanel());
         backButton.onClick.AddListener(()=> canvasManager.SetMenuPanel());
+
+        SetupButton();
     }
 
-    
+    private void SetupButton()
+    {
+        Button[] allButtons = GetComponentsInChildren<Button>();
+        foreach (var item in allButtons)
+        {
+            item.onClick.AddListener(() => GameBehaviour.Instance.PlaySound("Button"));
+        }
+    }
 
     private void ChangeCharacterType()
     {

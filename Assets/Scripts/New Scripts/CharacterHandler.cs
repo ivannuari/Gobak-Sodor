@@ -22,7 +22,7 @@ public class CharacterHandler : MonoBehaviour
         SetCharacter();
         GameBehaviour.Instance.OnJerseyColorChanged += ChangeSuitColor;
 
-        await Awaitable.WaitForSecondsAsync(1, CancellationToken.None);
+        await Awaitable.WaitForSecondsAsync(0.25f, CancellationToken.None);
 
         ChangeHairColor();
         ChangeSuitColor(GameBehaviour.Instance.characterJerseyColor);

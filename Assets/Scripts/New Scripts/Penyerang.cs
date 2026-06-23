@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class Penyerang : MonoBehaviour
 {
@@ -15,9 +16,11 @@ public class Penyerang : MonoBehaviour
     private Outline _outline;
     private Animator _anim;
     private CharacterHandler _charaHandler;
+    private NavMeshAgent _agent;
 
     private void Start()
     {
+        _agent = GetComponent<NavMeshAgent>();
         _outline = GetComponent<Outline>();
         _anim = GetComponentInChildren<Animator>();
         _charaHandler = GetComponentInChildren<CharacterHandler>();
@@ -25,6 +28,7 @@ public class Penyerang : MonoBehaviour
 
         bool isPlayer = GameBehaviour.Instance.characterType == CharacterType.Penyerang;
         _charaHandler.isPlayer = isPlayer;
+        _agent.speed = speed;
     }
 
     public void Activate()
@@ -34,10 +38,7 @@ public class Penyerang : MonoBehaviour
 
     public void MoveTo(Vector3 targetPosition)
     {
-        // movement player tetap via Transform langsung
-        Vector3 dir = (targetPosition - transform.position).normalized;
-        transform.position += dir * speed * Time.deltaTime;
-        _anim.SetFloat("Movement", dir.magnitude * speed);
+        _agent.SetDestination(targetPosition);  
     }
 
     public void SetAsActiveAi()
@@ -66,7 +67,8 @@ public class Penyerang : MonoBehaviour
         {
             AiMovement();
         }
-        _anim.SetFloat("Movement", GetCurrentSpeed());
+
+        _anim.SetFloat("Movement", _agent.velocity.magnitude);
     }
 
     private void AiMovement()

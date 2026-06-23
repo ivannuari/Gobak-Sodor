@@ -12,6 +12,7 @@ public class Checkpoint : MonoBehaviour
         if (isCollide)
         {
             bool isPenyerang = GameBehaviour.Instance.characterType == CharacterType.Penyerang;
+
             if (isPenyerang)
             {
                 Penyerang _penyerang = other.GetComponent<Penyerang>();
@@ -43,14 +44,11 @@ public class Checkpoint : MonoBehaviour
                 {
                     case CheckpointType.Checkpoint:
                         _penyerang.checkpoint = true;
-                        //_controller.ShowNotification("Saatnya kembali ke awal");
                         break;
                     case CheckpointType.Finish:
                         if (_penyerang.checkpoint)
                         {
                             _controller.activePenyerang = null;
-                            //_controller.ShowNotification("Berhasil!!");
-                            //_controller.AddScore();
                             GameController.Instance.StartNewPenyerang();
                             Destroy(other.gameObject);
                         }
