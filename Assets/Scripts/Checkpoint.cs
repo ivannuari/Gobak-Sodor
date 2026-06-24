@@ -49,7 +49,8 @@ public class Checkpoint : MonoBehaviour
                         if (_penyerang.checkpoint)
                         {
                             _controller.activePenyerang = null;
-                            GameController.Instance.StartNewPenyerang();
+                            _controller.SubstractPoin();
+                            //GameController.Instance.StartNewPenyerang();
                             Destroy(other.gameObject);
                         }
                         break;

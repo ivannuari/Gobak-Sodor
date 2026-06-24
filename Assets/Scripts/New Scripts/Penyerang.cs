@@ -68,13 +68,17 @@ public class Penyerang : MonoBehaviour
             AiMovement();
         }
 
-        _anim.SetFloat("Movement", _agent.velocity.magnitude);
+        if (GameBehaviour.Instance.characterType == CharacterType.Penyerang)
+        {
+            _anim.SetFloat("Movement", _agent.velocity.magnitude);
+        }
     }
 
     private void AiMovement()
     {
         if (!aiActive) return;
-
+        float dist = 0;
+        
         if (!checkpoint)
         {
             // Menuju checkpoint01 dengan random Z
@@ -91,7 +95,7 @@ public class Penyerang : MonoBehaviour
             }
 
             // Cek apakah sudah sampai checkpoint01
-            float dist = Vector3.Distance(transform.position, _randomizedTarget);
+            dist = Vector3.Distance(transform.position, _randomizedTarget);
             if (dist < 1f)
             {
                 checkpoint = true;
@@ -122,7 +126,7 @@ public class Penyerang : MonoBehaviour
             }
 
             // Cek apakah sudah sampai checkpoint02 (kembali ke start)
-            float dist = Vector3.Distance(transform.position, _returnTarget);
+            dist = Vector3.Distance(transform.position, _returnTarget);
             if (dist < 1f)
             {
                 checkpoint = false;
@@ -136,6 +140,8 @@ public class Penyerang : MonoBehaviour
                 );
             }
         }
+
+        _anim.SetFloat("Movement", dist);
     }
 
     private Vector3 CalculateAvoidance()

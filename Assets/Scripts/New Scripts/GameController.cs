@@ -144,12 +144,18 @@ public class GameController : MonoBehaviour
     {
         Destroy(activePenyerang.gameObject);
         activePenyerang = null;
-        totalPenyerang--;
-        poin -= 10;
-        OnScoreUpdated?.Invoke(poin);
+        SubstractPoin();
+
         ShowNotification("Tertangkap!");
         GameBehaviour.Instance.PlaySound("Lose");
+    }
 
+    public void SubstractPoin()
+    {
+        totalPenyerang--;
+        poin -= 10;
+        
+        OnScoreUpdated?.Invoke(poin);
         CheckGameOver();
     }
 
