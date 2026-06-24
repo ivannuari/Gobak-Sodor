@@ -44,4 +44,26 @@ public class AudioManager : MonoBehaviour
             findSound.source.Play();
         }
     }
+
+    public void ChangeBgmVolume(float val)
+    {
+        bgmVolume = val;
+
+        Sound[] allBgm = Array.FindAll(allSounds, s => s.isLoop);
+        foreach (var item in allBgm)
+        {
+            item.source.volume = bgmVolume;
+        }
+    }
+
+    public void ChangeSfxVolume(float val)
+    {
+        sfxVolume = val;
+
+        Sound[] allSfx = Array.FindAll(allSounds, s => !s.isLoop);
+        foreach (var item in allSfx)
+        {
+            item.source.volume = sfxVolume;
+        }
+    }
 }

@@ -33,11 +33,11 @@ public class OptionPanel : MonoBehaviour
 
     private void ChangeSfx(float val)
     {
-
+        GameBehaviour.Instance.ChangeSfxVolume(val);
     }
 
     private void ChangeBgm(float val)
     {
-
+        GameBehaviour.Instance.ChangeBgmVolume(val);
     }
 }

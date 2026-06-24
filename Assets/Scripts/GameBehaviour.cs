@@ -78,6 +78,16 @@ public class GameBehaviour : MonoBehaviour
     {
         _audioManager.PlaySound(soundName);
     }
+
+    public void ChangeBgmVolume(float val)
+    {
+        _audioManager.ChangeBgmVolume(val);
+    }
+
+    public void ChangeSfxVolume(float val)
+    {
+        _audioManager.ChangeSfxVolume(val);
+    }
 }
 
 public enum Difficulties
